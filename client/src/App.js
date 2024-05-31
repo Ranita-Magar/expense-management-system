@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import "antd/dist/reset.css";
 import Register from "./pages/Register";
@@ -9,12 +9,26 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoutes>
+              <HomePage />
+            </ProtectedRoutes>
+          }
+        />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </>
   );
+}
+export function ProtectedRoutes(props) {
+  if (localStorage.getItem("user")) {
+    return props.children;
+  } else {
+    return <Navigate to="/login" />;
+  }
 }
 
 export default App;
