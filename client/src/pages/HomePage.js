@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Select, message, Table } from "antd";
+import { Modal, Form, Input, Select, message, Table, DatePicker } from "antd";
 import Layout from "../components/layout/Layout";
 import axios from "axios";
 import Spinner from "../components/Spinner";
+import moment from "moment";
+const { RangePicker } = DatePicker;
 
 const HomePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [allTransaction, setAllTransaction] = useState([]);
+  const [frequency, setFrequency] = useState("7");
+  const [selectedDate, setSelectedDate] = useState([]);
+  const [type, setType] = useState("all");
 
   //table data
   const columns = [
     {
       title: "Date",
       dataIndex: "date",
+      render: (text) => <span>{moment(text).format("YYYY-MM-DD")}</span>,
     },
     {
       title: "Amount",
@@ -44,6 +50,9 @@ const HomePage = () => {
       setLoading(true);
       const res = await axios.post("/transactions/get-transaction", {
         userid: user._id,
+        frequency,
+        selectedDate,
+        type,
       });
       setLoading(false);
       setAllTransaction(res.data);
@@ -57,7 +66,8 @@ const HomePage = () => {
   //useEffect hook
   useEffect(() => {
     getAllTransactions();
-  }, []);
+  }, [frequency, selectedDate, type]);
+
   //form handling
   const handleSubmit = async (values) => {
     try {
@@ -80,7 +90,39 @@ const HomePage = () => {
     <Layout>
       {loading && <Spinner />}
       <div className="filters">
-        <div>range filters</div>
+        <div>
+          <h6>Select Frequency</h6>
+          <Select value={frequency} onChange={(values) => setFrequency(values)}>
+            <Select.Option value="7">Last 1 week</Select.Option>
+            <Select.Option value="30">Last 1 month</Select.Option>
+            <Select.Option value="365">Last 1 year</Select.Option>
+            <Select.Option value="custom">Custom</Select.Option>
+          </Select>
+
+          {frequency === "custom" && (
+            <RangePicker
+              value={selectedDate}
+              onChange={(values) => setSelectedDate(values)}
+            />
+          )}
+        </div>
+
+        <div>
+          <h6>Select Type</h6>
+          <Select value={type} onChange={(values) => setType(values)}>
+            <Select.Option value="all">ALL</Select.Option>
+            <Select.Option value="income">INCOME</Select.Option>
+            <Select.Option value="expense">EXPENSE</Select.Option>
+          </Select>
+
+          {frequency === "custom" && (
+            <RangePicker
+              value={selectedDate}
+              onChange={(values) => setSelectedDate(values)}
+            />
+          )}
+        </div>
+
         <div>
           <button
             className="btn btn-primary"
