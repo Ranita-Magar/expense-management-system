@@ -6,15 +6,19 @@ const transactionSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Amount is required."],
     },
+    type: {
+      type: String,
+      required: [true, "type is required"],
+    },
     category: {
       type: String,
       required: [true, "Category is required."],
     },
     reference: {
-      typeof: String,
+      type: String,
     },
     description: {
-      typeof: String,
+      type: String,
       required: [true, "Description is required."],
     },
     date: {
