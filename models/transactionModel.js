@@ -11,10 +11,10 @@ const transactionSchema = new mongoose.Schema(
       required: [true, "Category is required."],
     },
     reference: {
-      typeof: String,
+      type: String,
     },
     description: {
-      typeof: String,
+      type: String,
       required: [true, "Description is required."],
     },
     date: {
