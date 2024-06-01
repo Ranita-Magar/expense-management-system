@@ -40,11 +40,11 @@ const Login = () => {
         <Form layout="vertical" onFinish={SubmitHandler}>
           <h1>Login Form</h1>
 
-          <Form.Item label="Email" name="email">
+          <Form.Item label="Email" name="email" required>
             <Input type="email" />
           </Form.Item>
 
-          <Form.Item label="Password" name="password">
+          <Form.Item label="Password" name="password" required>
             <Input type="password" />
           </Form.Item>
 
